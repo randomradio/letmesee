@@ -5,6 +5,7 @@
   "main": "dist/worker.js",
   "scripts": {
     "build": "node build.js",
+    "build:pages": "node build-pages.js",
     "dev": "wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "deploy:staging": "npm run build && wrangler deploy --env staging"
