@@ -24,14 +24,25 @@ function buildWorker() {
         const jsContent = fs.readFileSync(path.join(__dirname, 'public', 'app.js'), 'utf8');
         const workerTemplate = fs.readFileSync(path.join(__dirname, 'worker.js'), 'utf8');
         
+        console.log('📖 Read source files successfully');
+        
         // Escape content for JavaScript
         const escapedHtml = escapeForJS(htmlContent);
         const escapedJs = escapeForJS(jsContent);
         
+        console.log('🔧 Escaped content for JavaScript');
+        
         // Replace placeholders in worker template
         const workerCode = workerTemplate
-            .replace('HTML_CONTENT', `\`${escapedHtml}\``)
-            .replace('JS_CONTENT', `\`${escapedJs}\``);
+            .replaceAll('HTML_CONTENT', `\`${escapedHtml}\``)
+            .replaceAll('JS_CONTENT', `\`${escapedJs}\``);
+        
+        console.log('🔄 Replaced placeholders in worker template');
+        
+        // Verify replacements worked
+        if (workerCode.includes('HTML_CONTENT') || workerCode.includes('JS_CONTENT')) {
+            throw new Error('Placeholder replacement failed');
+        }
         
         // Write the final worker script
         fs.writeFileSync(path.join(__dirname, 'dist', 'worker.js'), workerCode);
@@ -45,6 +56,7 @@ function buildWorker() {
         
     } catch (error) {
         console.error('❌ Build failed:', error.message);
+        console.error(error.stack);
         process.exit(1);
     }
 }

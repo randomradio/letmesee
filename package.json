@@ -1,5 +1,5 @@
 {
-  "name": "content-previewer",
+  "name": "letmesee",
   "version": "1.0.0",
   "description": "Lightweight preview tool for markdown, LaTeX, and HTML content",
   "main": "dist/worker.js",
