@@ -1,0 +1,28 @@
+{
+  "name": "content-previewer",
+  "version": "1.0.0",
+  "description": "Lightweight preview tool for markdown, LaTeX, and HTML content",
+  "main": "dist/worker.js",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:staging": "npm run build && wrangler deploy --env staging"
+  },
+  "keywords": [
+    "markdown",
+    "latex",
+    "html",
+    "preview",
+    "ocr",
+    "cloudflare-workers"
+  ],
+  "author": "Content Previewer",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
