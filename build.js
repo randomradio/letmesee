@@ -32,10 +32,14 @@ function buildWorker() {
         
         console.log('🔧 Escaped content for JavaScript');
         
-        // Replace placeholders in worker template
-        const workerCode = workerTemplate
-            .replaceAll('HTML_CONTENT', `\`${escapedHtml}\``)
-            .replaceAll('JS_CONTENT', `\`${escapedJs}\``);
+        // Replace placeholders in worker template using a more reliable method
+        let workerCode = workerTemplate;
+        
+        // Replace HTML_CONTENT
+        workerCode = workerCode.replaceAll('HTML_CONTENT', '`' + escapedHtml + '`');
+        
+        // Replace JS_CONTENT  
+        workerCode = workerCode.replaceAll('JS_CONTENT', '`' + escapedJs + '`');
         
         console.log('🔄 Replaced placeholders in worker template');
         
