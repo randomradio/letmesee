@@ -25,18 +25,6 @@ class ContentPreviewer {
                 console.log('AdSense initialization failed:', e);
             }
         }
-        
-        // Hide SEO content when user starts using the app
-        this.inputArea.addEventListener('focus', () => {
-            document.body.classList.add('app-active');
-        });
-        
-        // Show SEO content if input is empty and loses focus
-        this.inputArea.addEventListener('blur', () => {
-            if (!this.inputArea.value.trim()) {
-                document.body.classList.remove('app-active');
-            }
-        });
     }
     
     initializeEventListeners() {
