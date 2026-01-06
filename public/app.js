@@ -529,8 +529,26 @@ This is a sample LaTeX document with mathematical expressions.
         
         for (let i = 0; i < mermaidElements.length; i++) {
             const element = mermaidElements[i];
-            const code = element.textContent;
+            const code = element.textContent.trim();
             const id = `mermaid-${Date.now()}-${i}`;
+            
+            // Skip rendering if code is too short or obviously incomplete
+            if (code.length < 10 || this.isMermaidIncomplete(code)) {
+                // Show a gentle placeholder instead of error
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mermaid-placeholder';
+                wrapper.innerHTML = `<div style="
+                    padding: 1rem; 
+                    background: #f6f8fa; 
+                    border: 2px dashed #d1d9e0; 
+                    border-radius: 6px; 
+                    text-align: center; 
+                    color: #656d76;
+                    font-style: italic;
+                ">✏️ Continue typing your Mermaid diagram...</div>`;
+                element.parentNode.replaceWith(wrapper);
+                continue;
+            }
             
             try {
                 const { svg } = await mermaid.render(id, code);
@@ -540,9 +558,51 @@ This is a sample LaTeX document with mathematical expressions.
                 element.parentNode.replaceWith(wrapper);
             } catch (error) {
                 console.error('Mermaid rendering error:', error);
-                element.parentNode.innerHTML = `<div class="error">Mermaid diagram error: ${error.message}</div>`;
+                
+                // Show a more user-friendly error message
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mermaid-error';
+                wrapper.innerHTML = `<div style="
+                    padding: 1rem; 
+                    background: #fff8f8; 
+                    border: 1px solid #f8d7da; 
+                    border-radius: 6px; 
+                    color: #721c24;
+                ">
+                    <strong>Mermaid Syntax Issue</strong><br>
+                    <small>Check your diagram syntax or continue editing...</small>
+                </div>`;
+                element.parentNode.replaceWith(wrapper);
             }
         }
+    }
+    
+    isMermaidIncomplete(code) {
+        // Check for common patterns that indicate incomplete Mermaid code
+        const lines = code.split('\n').map(line => line.trim()).filter(line => line);
+        
+        // Too few lines for a complete diagram
+        if (lines.length < 2) return true;
+        
+        // Check for incomplete graph declarations
+        if (code.match(/^(graph|flowchart|sequenceDiagram|classDiagram|gitgraph|pie|journey|gantt)\s*$/m)) {
+            return true;
+        }
+        
+        // Check for incomplete arrows or connections
+        if (code.includes('-->') && code.split('-->').length < 2) return true;
+        if (code.includes('->') && code.split('->').length < 2) return true;
+        
+        // Check for unmatched brackets or quotes
+        const openBrackets = (code.match(/\[/g) || []).length;
+        const closeBrackets = (code.match(/\]/g) || []).length;
+        if (openBrackets !== closeBrackets) return true;
+        
+        const openParens = (code.match(/\(/g) || []).length;
+        const closeParens = (code.match(/\)/g) || []).length;
+        if (openParens !== closeParens) return true;
+        
+        return false;
     }
     
     showError(message) {
