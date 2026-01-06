@@ -8,13 +8,6 @@
 const fs = require('fs');
 const path = require('path');
 
-function escapeForJS(str) {
-    return str
-        .replace(/\\/g, '\\\\')
-        .replace(/`/g, '\\`')
-        .replace(/\$/g, '\\$');
-}
-
 function buildWorker() {
     console.log('Building Cloudflare Worker...');
     
@@ -26,20 +19,18 @@ function buildWorker() {
         
         console.log('📖 Read source files successfully');
         
-        // Escape content for JavaScript
-        const escapedHtml = escapeForJS(htmlContent);
-        const escapedJs = escapeForJS(jsContent);
+        // Use Base64 encoding to avoid all escaping issues
+        const htmlBase64 = Buffer.from(htmlContent).toString('base64');
+        const jsBase64 = Buffer.from(jsContent).toString('base64');
         
-        console.log('🔧 Escaped content for JavaScript');
+        console.log('🔧 Encoded content to Base64');
         
-        // Replace placeholders in worker template using a more reliable method
+        // Replace placeholders in worker template
         let workerCode = workerTemplate;
         
-        // Replace HTML_CONTENT
-        workerCode = workerCode.replaceAll('HTML_CONTENT', '`' + escapedHtml + '`');
-        
-        // Replace JS_CONTENT  
-        workerCode = workerCode.replaceAll('JS_CONTENT', '`' + escapedJs + '`');
+        // Replace with Base64 decode calls
+        workerCode = workerCode.replaceAll('HTML_CONTENT', `atob('${htmlBase64}')`);
+        workerCode = workerCode.replaceAll('JS_CONTENT', `atob('${jsBase64}')`);
         
         console.log('🔄 Replaced placeholders in worker template');
         
