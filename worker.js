@@ -47,10 +47,16 @@ export default {
           '.' + pathname.split('.').pop() : '.html';
         const mimeType = MIME_TYPES[extension] || 'text/plain';
         
+        // Set cache headers based on whether file has hash
+        const hasHash = /\.[a-f0-9]{8}\.(js|css)$/.test(pathname);
+        const cacheControl = hasHash 
+          ? 'public, max-age=31536000, immutable' // 1 year for hashed files
+          : 'public, max-age=3600'; // 1 hour for non-hashed files
+        
         return new Response(fileContent, {
           headers: {
             'Content-Type': mimeType,
-            'Cache-Control': 'public, max-age=86400', // 24 hours
+            'Cache-Control': cacheControl,
             ...corsHeaders
           }
         });
