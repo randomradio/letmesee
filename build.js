@@ -20,6 +20,8 @@ function buildWorker() {
         // Read source files
         const htmlContent = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
         const jsContent = fs.readFileSync(path.join(__dirname, 'public', 'app.js'), 'utf8');
+        const sitemapContent = fs.readFileSync(path.join(__dirname, 'public', 'sitemap.xml'), 'utf8');
+        const robotsContent = fs.readFileSync(path.join(__dirname, 'public', 'robots.txt'), 'utf8');
         const workerTemplate = fs.readFileSync(path.join(__dirname, 'worker.js'), 'utf8');
         
         console.log('📖 Read source files successfully');
@@ -40,6 +42,8 @@ function buildWorker() {
         // Use Base64 encoding to avoid all escaping issues
         const htmlBase64 = Buffer.from(updatedHtmlContent).toString('base64');
         const jsBase64 = Buffer.from(jsContent).toString('base64');
+        const sitemapBase64 = Buffer.from(sitemapContent).toString('base64');
+        const robotsBase64 = Buffer.from(robotsContent).toString('base64');
         
         console.log('🔧 Encoded content to Base64 with hash-busted references');
         
@@ -51,7 +55,9 @@ function buildWorker() {
   '/': atob('${htmlBase64}'),
   '/index.html': atob('${htmlBase64}'),
   '/app.js': atob('${jsBase64}'),
-  '/${hashedJsFilename}': atob('${jsBase64}')
+  '/${hashedJsFilename}': atob('${jsBase64}'),
+  '/sitemap.xml': atob('${sitemapBase64}'),
+  '/robots.txt': atob('${robotsBase64}')
 }`;
         
         // Replace HTML_CONTENT and JS_CONTENT with the complete mapping

@@ -11,7 +11,32 @@ class ContentPreviewer {
         
         this.initializeEventListeners();
         this.initializeLibraries();
+        this.initializeAds();
         this.updatePlaceholder();
+    }
+    
+    initializeAds() {
+        // Initialize Google AdSense
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.log('AdSense initialization failed:', e);
+            }
+        }
+        
+        // Hide SEO content when user starts using the app
+        this.inputArea.addEventListener('focus', () => {
+            document.body.classList.add('app-active');
+        });
+        
+        // Show SEO content if input is empty and loses focus
+        this.inputArea.addEventListener('blur', () => {
+            if (!this.inputArea.value.trim()) {
+                document.body.classList.remove('app-active');
+            }
+        });
     }
     
     initializeEventListeners() {
@@ -24,11 +49,20 @@ class ContentPreviewer {
         
         // Input changes with debouncing
         let debounceTimer;
+        let hasTrackedInput = false;
         this.inputArea.addEventListener('input', () => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 this.updatePreview();
             }, 300);
+            
+            // Track first content input for analytics
+            if (!hasTrackedInput && this.inputArea.value.trim()) {
+                hasTrackedInput = true;
+                if (typeof trackContentInput === 'function') {
+                    trackContentInput();
+                }
+            }
         });
         
         // Initial preview update
@@ -104,6 +138,11 @@ class ContentPreviewer {
     
     setFormat(format) {
         this.currentFormat = format;
+        
+        // Track format changes for analytics
+        if (typeof trackFormatChange === 'function') {
+            trackFormatChange(format);
+        }
         
         // Update button states
         this.formatButtons.forEach(btn => {
