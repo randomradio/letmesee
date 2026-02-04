@@ -16,15 +16,8 @@ class ContentPreviewer {
     }
     
     initializeAds() {
-        // Initialize Google AdSense
-        if (typeof adsbygoogle !== 'undefined') {
-            try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-                console.log('AdSense initialization failed:', e);
-            }
-        }
+        // Google AdSense ads are initialized automatically via data attributes
+        // This method is kept for future custom ad initialization if needed
     }
     
     initializeEventListeners() {

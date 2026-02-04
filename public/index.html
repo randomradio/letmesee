@@ -398,6 +398,19 @@
             color: #656d76;
             text-align: center;
         }
+
+        /* Sidebar Ad (Desktop Only) */
+        .sidebar-ad {
+            display: none;
+            width: 160px;
+            background: #f8f9fa;
+            border-left: 1px solid #e1e5e9;
+            border-right: 1px solid #e1e5e9;
+            padding: 1rem 0.5rem;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
         
         .seo-footer h3 {
             font-size: 1rem;
@@ -430,19 +443,34 @@
             .main-container {
                 flex-direction: column;
             }
-            
+
             .input-panel, .preview-panel {
                 width: 100%;
                 height: 50vh;
             }
-            
+
             .header {
                 flex-wrap: wrap;
                 gap: 0.5rem;
             }
-            
+
             .header h1 {
                 font-size: 1.2rem;
+            }
+        }
+
+        /* Show sidebar ad on large screens */
+        @media (min-width: 1280px) {
+            .sidebar-ad {
+                display: flex !important;
+            }
+
+            .input-panel {
+                width: calc(50% - 80px);
+            }
+
+            .preview-panel {
+                width: calc(50% - 80px);
             }
         }
     </style>
@@ -475,7 +503,22 @@
             <div class="panel-header">Input</div>
             <textarea class="input-area" placeholder="Paste your content here..."></textarea>
         </div>
-        
+
+        <!-- Sidebar Ad (Desktop Only) -->
+        <div class="sidebar-ad">
+            <div class="ad-container" style="margin: 0; border: none; background: transparent;">
+                <div>
+                    <div class="ad-label">Ad</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="vertical"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </div>
+        </div>
+
         <div class="preview-panel">
             <div class="panel-header">Preview</div>
             <div class="preview-content" id="preview">
